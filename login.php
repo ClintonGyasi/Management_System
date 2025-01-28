@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Redirect to appropriate page based on role
             if ($_SESSION['role'] == 'student') {
-                header("Location: complaints.php");
+                header("Location: complaint.php");
             } elseif ($_SESSION['role'] == 'executive') {
                 header("Location: audit.php");
             } elseif ($_SESSION['role'] == 'management') {
