@@ -1,24 +1,30 @@
 <?php
-require 'db.php';
+require 'db.php';  // Include your database connection file
+
+// Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-    $role = $_POST['role'];
+    $password = $_POST['password'];
 
-    $query = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
+    // Hash the password before saving it to the database
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+    // Insert the user with the hashed password into the database
+    $query = "INSERT INTO users (username, password) VALUES (?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("sss", $username, $password, $role);
-    $stmt->execute();
-    echo "User registered successfully.";
+    $stmt->bind_param("ss", $username, $hashed_password);
+
+    if ($stmt->execute()) {
+        echo "User registered successfully!";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
 }
 ?>
+
+<!-- Registration Form -->
 <form method="POST">
     <input type="text" name="username" placeholder="Username" required>
     <input type="password" name="password" placeholder="Password" required>
-    <select name="role">
-        <option value="student">Student</option>
-        <option value="executive">Executive</option>
-        <option value="management">Management</option>
-    </select>
     <button type="submit">Register</button>
 </form>
