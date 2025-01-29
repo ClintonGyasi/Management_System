@@ -2,8 +2,8 @@
 session_start(); // Start the session
 
 // Check if the user is logged in and is a student
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'student') {
-    die("Access denied. You need to be logged in as a student.");
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['student', 'admin'])) {
+    die("Access denied. You need to be logged in as a student or an admin.");
 }
 
 require 'db.php'; // Database connection

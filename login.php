@@ -4,13 +4,13 @@ require 'db.php'; // Include the database connection
 
 // If the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
+    $username_or_custom_id = $_POST['username_or_custom_id'];  // Get the entered username or custom ID
     $password = $_POST['password'];
 
-    // Query the users table to find the user
-    $query = "SELECT * FROM users WHERE username = ?";
+    // Query the users table to find the user by either username or custom_id
+    $query = "SELECT * FROM users WHERE username = ? OR custom_id = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $username);
+    $stmt->bind_param("ss", $username_or_custom_id, $username_or_custom_id);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -38,9 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
+
 <!-- Login form -->
 <form method="POST">
-    <input type="text" name="username" placeholder="Username" required>
-    <input type="password" name="password" placeholder="Password" required>
+    <label for="username_or_custom_id">Username or Custom ID:</label>
+    <input type="text" name="username_or_custom_id" placeholder="Enter your username or custom ID" required><br><br>
+    
+    <label for="password">Password:</label>
+    <input type="password" name="password" placeholder="Password" required><br><br>
+    
     <button type="submit">Login</button>
 </form>

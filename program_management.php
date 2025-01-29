@@ -21,7 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_program'])) {
     $stmt->bind_param("sss", $program_name, $description, $scheduled_date);
     
     if ($stmt->execute()) {
-        echo "Program added successfully!";
+        // Set a session variable to indicate success
+        $_SESSION['program_added'] = true;
+        header('Location: ' . $_SERVER['PHP_SELF']); // Redirect to prevent re-submission
+        exit;
     } else {
         echo "Error adding program: " . $conn->error;
     }
@@ -82,6 +85,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_program'])) {
         <br>
         <button type="submit" name="add_program">Add Program</button>
     </form>
+
+    <?php
+    // Check if the program was added and show a success message
+    if (isset($_SESSION['program_added']) && $_SESSION['program_added'] === true) {
+        echo "<p>Program added successfully!</p>";
+        unset($_SESSION['program_added']); // Clear the session variable after displaying the message
+    }
+    ?>
 
     <h2>Existing Programs</h2>
     <table border="1">

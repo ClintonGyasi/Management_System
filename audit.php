@@ -2,9 +2,10 @@
 session_start(); // Start the session
 
 // Check if the user is logged in and is an executive
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'executive') {
-    die("Access denied. You need to be logged in as an executive.");
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['executive', 'admin'])) {
+    die("Access denied. You need to be logged in as an executive or an admin.");
 }
+
 
 require 'db.php'; // Database connection
 
